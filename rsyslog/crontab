@@ -1,0 +1,2 @@
+# Delete files more than 7d old from syslog dir.
+00 3 * * * root tmpwatch 7d /var/syslog/
