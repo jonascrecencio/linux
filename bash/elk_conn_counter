@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# Tempo entre verificações em segundos
+SLEEPTIME=5
+LOG=/var/log/elk/conn_counter.log
+
+case "$1" in
+    'start')
+        echo "Iniciando processo conn_counter..."
+        echo "`date "+%Y-%m-%d %H:%M:%S"` - Iniciando processo conn_counter" >> $LOG
+        /opt/client/bin/elk_conn_counter >> $LOG &
+        RETVAL=0
+        ;;
+    'stop')
+        echo "Parando processo conn_counter..."
+        echo "`date "+%Y-%m-%d %H:%M:%S"` - Parando processo conn_counter" >> $LOG
+        killall elk_conn_counter 2>/dev/null;
+        RETVAL=0
+        ;;
+    '')
+        while : ; do
+            echo -n "`date "+%Y-%m-%d %H:%M:%S"` - Conexões Ativas: " && /usr/sbin/conntrack -L 2>/dev/null | egrep -v "(UNREPLIED|TIME_WAIT)" | wc -l
+            sleep $SLEEPTIME
+        done
+	;;
+    *)
+        echo "Usage: $0 { start | stop }"
+        RETVAL=1
+        ;;
+esac
+exit $RETVAL

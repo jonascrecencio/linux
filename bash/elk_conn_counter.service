@@ -1,0 +1,11 @@
+[Unit]
+Description=Conntrack Counter
+
+[Service]
+Type=oneshot
+ExecStart=/opt/client/bin/elk_conn_counter start
+ExecStop=/opt/client/bin/elk_conn_counter stop
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
